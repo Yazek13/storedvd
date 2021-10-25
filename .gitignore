@@ -10,7 +10,8 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media
-
+secret_key.txt
+secret_key
 ### Linux ###
 *~
 
