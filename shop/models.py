@@ -40,4 +40,22 @@ class Product(models.Model):
         verbose_name_plural = "Товары"
 
     def __str__(self):
-        return '{0} [{1}]' .format(self.title, self.section.title)
+        return '{0} [{1}]'.format(self.title, self.section.title)
+
+
+class Discount(models.Model):
+    code = models.CharField(max_length=10, verbose_name="Код купона")
+    value = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)],
+        verbose_name="Размер скидки",
+        help_text="В процентах"
+    )
+
+    class Meta:
+        ordering = ["-value"]
+        verbose_name = "Скидка"
+        verbose_name_plural = "Скидки"
+
+    def __str__(self):
+        # return '{0} {1} %'.format(self.code, self.value)
+        return self.code + " (" + str(self.value) + "%)"
