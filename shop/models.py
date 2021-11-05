@@ -26,7 +26,7 @@ class Product(models.Model):
         validators=[MinValueValidator(1900), MaxValueValidator(datetime.date.today().year)], verbose_name="Год"
     )
     country = models.CharField(max_length=70, verbose_name="Страна")
-    director = country = models.CharField(max_length=70, verbose_name="Режисер")
+    director = models.CharField(max_length=70, verbose_name="Режисер")
     play = models.IntegerField(null=True, verbose_name="Продолжительность фильма",
                                validators=[MinValueValidator(1)],
                                blank=True, help_text="В секундах")
@@ -59,3 +59,32 @@ class Discount(models.Model):
     def __str__(self):
         # return '{0} {1} %'.format(self.code, self.value)
         return self.code + " (" + str(self.value) + "%)"
+
+
+class Order(models.Model):
+    need_delivery = models.BooleanField(verbose_name="Необходима доставка")
+    discount = models.ForeignKey(Discount, verbose_name="Скидка", on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=70, verbose_name="Имя")
+    phone = models.CharField(max_length=70, verbose_name="Телефон")
+    email = models.EmailField()
+    address = models.TextField(blank=True, verbose_name="Адрес")
+    notice = models.CharField(max_length=150, verbose_name="Примечание к заказу", blank=True)
+    data_order = models.DateTimeField(auto_now_add=True, verbose_name="Дата заказа")
+    data_send = models.DateTimeField(null=True, blank=True, verbose_name="Дата отправки")
+
+    STATUSES = [
+        ("NEW", "Новый заказ"),
+        ("APR", "Подтвержден"),
+        ("PAY", "Оплачен"),
+        ("CNL", "Отменён"),
+    ]
+
+    status = models.CharField(choices=STATUSES, max_length=3, default="NEW", verbose_name="Статус")
+
+    class Meta:
+        ordering = ["-data_order"]
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+
+    def __str__(self):
+        return "ID: " + str(self.id)
