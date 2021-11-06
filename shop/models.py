@@ -18,7 +18,7 @@ class Section(models.Model):
 
 
 class Product(models.Model):
-    section = models.ForeignKey("Section", on_delete=models.SET_NULL, null=True, verbose_name="Раздел")
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, verbose_name="Раздел")
     title = models.CharField(max_length=70, verbose_name="Название")
     image = models.ImageField(upload_to="images", verbose_name="Изображение")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
@@ -88,3 +88,17 @@ class Order(models.Model):
 
     def __str__(self):
         return "ID: " + str(self.id)
+
+
+class OrderLine(models.Model):
+    order = models.ForeignKey(Order, verbose_name="Заказ", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, verbose_name="Товар", on_delete=models.SET_NULL, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена", default=0)
+    count = models.IntegerField(verbose_name="Колличество", validators=[MinValueValidator(1)], default=1)
+
+    class Meta:
+        verbose_name = "Строка заказа"
+        verbose_name_plural = "Строки заказов"
+
+    def __str__(self):
+        return "Заказ (ID {0}) {1}: {2} шт" .format(self.order.id, self.product.title, self.count)
