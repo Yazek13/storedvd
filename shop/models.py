@@ -102,3 +102,21 @@ class OrderLine(models.Model):
 
     def __str__(self):
         return "Заказ (ID {0}) {1}: {2} шт" .format(self.order.id, self.product.title, self.count)
+
+
+class Gallery(models.Model):
+    photo_gallery = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name="Фото галереи")
+
+
+class Comment(models.Model):
+    commentary = models.TextField(verbose_name="Коментарий")
+    data_order = models.DateTimeField(auto_now_add=True, verbose_name="Дата коментария")
+    is_published = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["data_order"]
+        verbose_name = "Коментарий"
+        verbose_name_plural = "Коментарии"
+
+    def __str__(self):
+        return self.title
