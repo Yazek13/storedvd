@@ -107,6 +107,10 @@ class OrderLine(models.Model):
 class Gallery(models.Model):
     photo_gallery = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name="Фото галереи")
 
+    class Meta:
+        verbose_name = "Фото галереи"
+        verbose_name_plural = "Галерея"
+
 
 class Comment(models.Model):
     commentary = models.TextField(verbose_name="Коментарий")
