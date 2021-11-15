@@ -106,6 +106,7 @@ class OrderLine(models.Model):
 
 class Gallery(models.Model):
     photo_gallery = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name="Фото галереи")
+    data_gallery = models.DateTimeField(auto_now_add=True, verbose_name="Дата о публикации фото")
 
     class Meta:
         verbose_name = "Фото галереи"
