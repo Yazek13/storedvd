@@ -18,6 +18,7 @@ class Section(models.Model):
 
 
 class Product(models.Model):
+    """Модель всех фильмов """
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, verbose_name="Раздел")
     title = models.CharField(max_length=70, verbose_name="Название")
     image = models.ImageField(upload_to="images", verbose_name="Изображение")
@@ -44,6 +45,7 @@ class Product(models.Model):
 
 
 class Discount(models.Model):
+    """Модель купона на скидку"""
     code = models.CharField(max_length=10, verbose_name="Код купона")
     value = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(100)],
@@ -56,14 +58,20 @@ class Discount(models.Model):
         verbose_name = "Скидка"
         verbose_name_plural = "Скидки"
 
+    def value_percent(self):
+        return str(self.value) + "%"
+
     def __str__(self):
         # return '{0} {1} %'.format(self.code, self.value)
         return self.code + " (" + str(self.value) + "%)"
 
+    value_percent.short_description = "Размер скидки"
+
 
 class Order(models.Model):
+    """Модель скиндки"""
     need_delivery = models.BooleanField(verbose_name="Необходима доставка")
-    discount = models.ForeignKey(Discount, verbose_name="Скидка", on_delete=models.SET_NULL, null=True)
+    discount = models.ForeignKey(Discount, verbose_name="Скидка", on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=70, verbose_name="Имя")
     phone = models.CharField(max_length=70, verbose_name="Телефон")
     email = models.EmailField()
@@ -91,6 +99,7 @@ class Order(models.Model):
 
 
 class OrderLine(models.Model):
+    """Модель заказа товара"""
     order = models.ForeignKey(Order, verbose_name="Заказ", on_delete=models.CASCADE)
     product = models.ForeignKey(Product, verbose_name="Товар", on_delete=models.SET_NULL, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена", default=0)
@@ -106,7 +115,7 @@ class OrderLine(models.Model):
 
 class Gallery(models.Model):
     photo_gallery = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name="Фото галереи")
-    data_gallery = models.DateTimeField(auto_now_add=True, verbose_name="Дата о публикации фото")
+    # data_gallery = models.DateTimeField(auto_now_add=True, verbose_name="Дата о публикации фото")
 
     class Meta:
         verbose_name = "Фото галереи"
