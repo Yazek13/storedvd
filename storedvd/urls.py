@@ -24,7 +24,7 @@ from shop.views import ProductViewSet
 
 router = SimpleRouter()
 
-router.register("Product", ProductViewSet)
+router.register("product", ProductViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
